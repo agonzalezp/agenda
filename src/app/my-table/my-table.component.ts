@@ -3,7 +3,8 @@ import { MatPaginator, MatSort } from '@angular/material';
 import { MyTableDataSource } from './my-table-datasource';
 import { PersonService } from '../services/person.service';
 import { DataSource } from '@angular/cdk/table';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-table',
@@ -11,33 +12,72 @@ import { Observable } from 'rxjs';
   styleUrls: ['./my-table.component.scss'],
 })
 export class MyTableComponent implements OnInit {
-//  @ViewChild(MatPaginator) paginator: MatPaginator;
-//  @ViewChild(MatSort) sort: MatSort;
-   dataSource = new PersonDataSource (this.personService);
+  persons = new BehaviorSubject<any[]>([]);
+  dataSource = new PersonDataSource(this.persons);
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = [ 'name', 'lastname', 'email', 'phone', 'nick' ];
-  // 'id', 'avatar'
+  displayedColumns = [
+    'name',
+    'lastname',
+    'nick',
+    'actions'
+  ];
 
-  constructor(private personService: PersonService) {
-    this.personService.getConfig().subscribe( config => {
+  constructor(
+    private personService: PersonService,
+    private router: Router
+  ) {
+    // Load local files
+    this.personService.getConfig().subscribe(config => {
       console.log(config);
     });
-    this.personService.getPersons().subscribe(persons => {
-      console.log(persons);
-    });
+
+    this.personService
+      .getPersons()
+      .subscribe((persons: any[]) => {
+        this.persons.next(persons);
+      });
   }
-  ngOnInit() {
-     /*this.dataSource = new MyTableDataSource(this.paginator, this.sort);*/
+
+  ngOnInit() {}
+
+  update(person) {
+    localStorage.setItem('person', JSON.stringify(person));
+    this.router.navigate(['/Nuevo']);
+  }
+
+  delete(person) {
+    this.personService.deletePerson(person.id).subscribe(
+      response => {
+        console.log('OK: ', response);
+
+        // Remove deleted person from the current data collection;
+        const tmp = this.persons.value.filter(
+          p => p.id !== person.id
+        );
+
+        // Update data source stream
+        this.persons.next(tmp);
+      },
+      error => {
+        console.log('ERROR: ', error);
+      }
+    );
   }
 }
 
 export class PersonDataSource extends DataSource<any> {
-  constructor(private personService: PersonService) {
+  persons: BehaviorSubject<any>;
+
+  /** Stream of data that is provided to the table. */
+  constructor(persons: BehaviorSubject<any>) {
     super();
+    this.persons = persons;
   }
+
   connect(): Observable<any> {
-    return this.personService.getPersons();
+    return this.persons;
   }
+
   disconnect() {}
 }

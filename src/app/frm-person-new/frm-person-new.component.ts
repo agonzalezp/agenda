@@ -61,7 +61,7 @@ export class FrmPersonNewComponent implements OnInit {
           response => {
             console.log('OK: ', response);
             this.personForm.reset();
-            this.router.navigate(['/lista']);
+            this.router.navigate(['/Lista-Persona']);
           },
           error => {
             console.log('ERROR: ', error);

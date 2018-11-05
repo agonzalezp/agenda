@@ -7,12 +7,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MyNavComponent } from './my-nav/my-nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatTableModule } from '@angular/material';
-import { MatPaginatorModule, MatSortModule, MatGridListModule, MatCardModule, MatMenuModule, MatTreeModule } from '@angular/material';
+import { MatPaginatorModule, MatSortModule, MatGridListModule, MatCardModule, MatMenuModule, MatTreeModule, MatInputModule, MatSelectModule, MatRadioModule } from '@angular/material';
 import { MyTableComponent } from './my-table/my-table.component';
 import { MyDashComponent } from './my-dash/my-dash.component';
 import { MyTreeComponent } from './my-tree/my-tree.component';
 import { MyDragDropComponent } from './my-drag-drop/my-drag-drop.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { NewFormComponent } from './new-form/new-form.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FrmPersonNewComponent } from './frm-person-new/frm-person-new.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -21,7 +25,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MyTableComponent,
     MyDashComponent,
     MyTreeComponent,
-    MyDragDropComponent
+    MyDragDropComponent,
+    NewFormComponent,
+    FrmPersonNewComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +46,12 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatCardModule,
     MatMenuModule,
     MatTreeModule,
-    DragDropModule
+    DragDropModule,
+    MatInputModule,
+    MatSelectModule,
+    MatRadioModule,
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
